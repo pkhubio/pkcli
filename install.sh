@@ -82,4 +82,5 @@ then
 fi
 
 chmod a+x pk
-mv pk /usr/local/bin/
+rm -f /usr/local/bin/pk
+mv -f pk /usr/local/bin/
