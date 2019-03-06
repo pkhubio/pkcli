@@ -46,8 +46,6 @@ fi
 
 check_deps
 
-set -e
-
 if [ -z "$OS" ]; then
 case "$OSTYPE" in
   darwin*)  OS="darwin" ;;
@@ -69,6 +67,12 @@ fi
 echo "OS $OS ARCH $ARCH"
 DOWNLOAD_URL=$(curl  $BASE_URL | grep "$OS-$ARCH" | grep -Eo '(https?|ftp|file)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]')
 
+if [ -z "$DOWNLOAD_URL" ];
+then
+ echo "No download url could be calculated, please visit https://github.com/pkhubio/pkcli/releases to check for a compatible release"
+ echo "If no release is available for your platform, please file a ticket in git or contact us at https://pkhub.io"
+ exit -1
+fi
 
 echo "Download URL: $DOWNLOAD_URL"
 
