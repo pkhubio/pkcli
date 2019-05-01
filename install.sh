@@ -22,7 +22,6 @@ if command -v apk
 then
  command -v apk
  command -v curl &> /dev/null || apk add curl
- command -v wget &> /dev/null || apk add wget
  command -v grep &> /dev/null || apk add grep
  export OS="linux"
 fi
@@ -30,7 +29,6 @@ fi
 if command -v apt-get;
 then
  command -v curl  || { apt-get update ; apt-get install -y curl; }
- command -v wget  || apt-get install -y wget
  command -v grep  || apt-get install -y grep
  export OS="linux"
 fi
@@ -38,7 +36,6 @@ fi
 if command -v yum;
 then
  command -v curl  || yum install -y curl
- command -v wget  || yum install -y wget
  command -v grep  || yum install -y grep
  export OS="linux"
 fi
@@ -76,7 +73,7 @@ fi
 
 echo "Download URL: $DOWNLOAD_URL"
 
-wget -O pk "$DOWNLOAD_URL"
+curl -L "$DOWNLOAD_URL" -o pk
 
 if [ !  -d "/usr/local/bin/" ];
 then
