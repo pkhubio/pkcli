@@ -22,7 +22,6 @@ if command -v apk
 then
  command -v apk
  command -v curl &> /dev/null || apk add curl
- command -v wget &> /dev/null || apk add wget
  command -v grep &> /dev/null || apk add grep
  export OS="linux"
 fi
@@ -30,7 +29,6 @@ fi
 if command -v apt-get;
 then
  command -v curl  || { apt-get update ; apt-get install -y curl; }
- command -v wget  || apt-get install -y wget
  command -v grep  || apt-get install -y grep
  export OS="linux"
 fi
@@ -38,15 +36,12 @@ fi
 if command -v yum;
 then
  command -v curl  || yum install -y curl
- command -v wget  || yum install -y wget
  command -v grep  || yum install -y grep
  export OS="linux"
 fi
 }
 
 check_deps
-
-set -e
 
 if [ -z "$OS" ]; then
 case "$OSTYPE" in
@@ -69,10 +64,16 @@ fi
 echo "OS $OS ARCH $ARCH"
 DOWNLOAD_URL=$(curl  $BASE_URL | grep "$OS-$ARCH" | grep -Eo '(https?|ftp|file)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]')
 
+if [ -z "$DOWNLOAD_URL" ];
+then
+ echo "No download url could be calculated, please visit https://github.com/pkhubio/pkcli/releases to check for a compatible release"
+ echo "If no release is available for your platform, please file a ticket in git or contact us at https://pkhub.io"
+ exit -1
+fi
 
 echo "Download URL: $DOWNLOAD_URL"
 
-wget -O pk "$DOWNLOAD_URL"
+curl -L "$DOWNLOAD_URL" -o pk
 
 if [ !  -d "/usr/local/bin/" ];
 then
